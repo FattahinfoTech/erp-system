@@ -1,0 +1,94 @@
+<!-- templates/journal/journal_details.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Journal Details - {{ journal.journal_id }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5>Journal Entries</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Trn ID</th>
+                                <th>Account Debit</th>
+                                <th>Account Credit</th>
+                                <th>LC Number</th>
+                                <th>Note</th>
+                                <th>Debit Amount</th>
+                                <th>Credit Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entry in entries %}
+                            <tr>
+                                <td>{{ entry.trn_id }}</td>
+                                <td>{{ entry.account_debit }}</td>
+                                <td>{{ entry.account_credit }}</td>
+                                <td>{{ entry.lc_number }}</td>
+                                <td>{{ entry.note }}</td>
+                                <td>BDT {{ entry.debit_amount }}</td>
+                                <td>BDT {{ entry.credit_amount }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Add Journal Entry</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Transaction ID</label>
+                        {{ entry_form.trn_id }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Account Debit</label>
+                        {{ entry_form.account_debit }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Account Credit</label>
+                        {{ entry_form.account_credit }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">LC Number</label>
+                        {{ entry_form.lc_number }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Note</label>
+                        {{ entry_form.note }}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Debit Amount</label>
+                                {{ entry_form.debit_amount }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Credit Amount</label>
+                                {{ entry_form.credit_amount }}
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Entry</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

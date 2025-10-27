@@ -1,0 +1,75 @@
+<!-- templates/allotment/arrival_receiving.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Arrival Receive{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Arrival Receive</h5>
+    </div>
+    <div class="card-body">
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Allotment Sale/DO ID">
+                    <button class="btn btn-primary" type="button">Search</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Month</th>
+                        <th>Dealer Info</th>
+                        <th>LC/Lot</th>
+                        <th>Godown & LogCenter</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Rate</th>
+                        <th>Total</th>
+                        <th>Agreement Info</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for allotment in allotments %}
+                    <tr>
+                        <td>{{ allotment.allotment_id }}</td>
+                        <td>{{ allotment.status_type }}</td>
+                        <td>{{ allotment.date }}</td>
+                        <td>{{ allotment.month }}</td>
+                        <td>
+                            <strong>{{ allotment.dealer.name }}</strong><br>
+                            {{ allotment.dealer.district }}, {{ allotment.dealer.thana }}<br>
+                            {{ allotment.dealer.dealer_contact }}
+                        </td>
+                        <td>{{ allotment.lc_number }}</td>
+                        <td>{{ allotment.godown }}</td>
+                        <td>{{ allotment.product_info }}</td>
+                        <td>{{ allotment.quantity_in_m_ton }}</td>
+                        <td>{{ allotment.unit_price }}</td>
+                        <td>
+                            AGRI/IR: {{ allotment.agri_ir }}<br>
+                            Date: {{ allotment.agri_ir_date }}<br>
+                            Delivery: {{ allotment.delivery_from }}<br>
+                            Product: {{ allotment.delivery_product }}
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-success">Receive</button>
+                            <button class="btn btn-sm btn-warning">Edit</button>
+                            <button class="btn btn-sm btn-danger">Delete</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

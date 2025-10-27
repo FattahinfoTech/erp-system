@@ -1,0 +1,148 @@
+<!-- templates/settings_app/finish_product_type.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Finish Product Type{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>Finish Product Type</h4>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productTypeModal">
+        Create New
+    </button>
+</div>
+
+<!-- Product Type Modal -->
+<div class="modal fade" id="productTypeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Product Type</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Type Title</label>
+                        {{ form.type_title }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Value</label>
+                        {{ form.value }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Status</label>
+                        {{ form.status }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Product Type List Table -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>SL</th>
+                        <th>Product Type</th>
+                        <th>Value</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product_type in product_types %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ product_type.type_title }}</td>
+                        <td>{{ product_type.value }}</td>
+                        <td>
+                            <span class="badge bg-{% if product_type.status == 'Active' %}success{% elif product_type.status == 'Inactive' %}danger{% else %}warning{% endif %}">
+                                {{ product_type.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editProductTypeModal{{ product_type.id }}">
+                                Edit
+                            </button>
+                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteProductTypeModal{{ product_type.id }}">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Edit Product Type Modal -->
+                    <div class="modal fade" id="editProductTypeModal{{ product_type.id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Edit Product Type</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <form method="post" action="{% url 'finish_product_type' %}">
+                                    {% csrf_token %}
+                                    <div class="modal-body">
+                                        <input type="hidden" name="product_type_id" value="{{ product_type.id }}">
+                                        <div class="mb-3">
+                                            <label class="form-label">Type Title</label>
+                                            <input type="text" class="form-control" name="type_title" value="{{ product_type.type_title }}" placeholder="Type Title" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Value</label>
+                                            <input type="text" class="form-control" name="value" value="{{ product_type.value }}" placeholder="Value" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Status</label>
+                                            <select class="form-control" name="status" required>
+                                                <option value="Active" {% if product_type.status == 'Active' %}selected{% endif %}>Active</option>
+                                                <option value="Inactive" {% if product_type.status == 'Inactive' %}selected{% endif %}>Inactive</option>
+                                                <option value="Pending" {% if product_type.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Update</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Delete Product Type Modal -->
+                    <div class="modal fade" id="deleteProductTypeModal{{ product_type.id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Delete Product Type</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to delete "{{ product_type.type_title }}"?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <form method="post" action="{% url 'finish_product_type' %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="delete_id" value="{{ product_type.id }}">
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

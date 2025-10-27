@@ -1,0 +1,83 @@
+<!-- templates/manage_app/cost_center_list.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Cost Center List{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>Cost Center List</h4>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#costCenterModal">
+        Create New
+    </button>
+</div>
+
+<!-- Cost Center Modal -->
+<div class="modal fade" id="costCenterModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Cost Center</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Cost Center Name</label>
+                        {{ form.name }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Entry Date</label>
+                        {{ form.entry_date }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Status</label>
+                        {{ form.status }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Cost Center List Table -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>SL</th>
+                        <th>Entry Date</th>
+                        <th>Cost Center Name</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cost_center in cost_centers %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ cost_center.entry_date }}</td>
+                        <td>{{ cost_center.name }}</td>
+                        <td>
+                            <span class="badge bg-{% if cost_center.status == 'Active' %}success{% elif cost_center.status == 'Inactive' %}danger{% else %}warning{% endif %}">
+                                {{ cost_center.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

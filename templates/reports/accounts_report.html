@@ -1,0 +1,75 @@
+<!-- templates/reports/accounts_report.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Accounts Report{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5>Account Report</h5>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Enter Account ID</label>
+                        {{ form.account_id }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Start Date</label>
+                        {{ form.start_date }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">End Date</label>
+                        {{ form.end_date }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Select District</label>
+                        {{ form.district }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Select Thana</label>
+                        {{ form.thana }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Select LC</label>
+                        {{ form.lc_number }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Report Buttons -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                        <button type="submit" name="account_ledger" class="btn btn-primary me-2">Account Ledger</button>
+                        <button type="submit" name="cash_sheet" class="btn btn-primary me-2">Cash Sheet</button>
+                        <button type="submit" name="bank_sheet" class="btn btn-primary me-2">Bank Sheet</button>
+                        <button type="submit" name="party_balance_thana" class="btn btn-primary me-2">Party Balance By Thana</button>
+                        <button type="submit" name="party_balance_district" class="btn btn-primary me-2">Party Balance By District</button>
+                        <button type="submit" name="party_tran_district" class="btn btn-primary me-2">Party Tran By District</button>
+                        <button type="submit" name="lc_accounts" class="btn btn-primary me-2">LC Accounts</button>
+                        <button type="submit" name="party_balance_all" class="btn btn-primary">Party Balance All</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,108 @@
+<!-- templates/warehouse/do_change.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}DO Change{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">DO Change</h5>
+    </div>
+    <div class="card-body">
+        <!-- Search Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label">Date</label>
+                                <input type="date" class="form-control" id="searchDate">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Select Log Center</label>
+                                <select class="form-select" id="logCenterSearch">
+                                    <option value="">All Centers</option>
+                                    <option value="Admin">Admin</option>
+                                    <option value="Noapara">Noapara</option>
+                                    <option value="Nagarbari">Nagarbari</option>
+                                    <option value="Chittagong">Chittagong</option>
+                                    <option value="Narayanganj">Narayanganj</option>
+                                    <option value="Ashugang">Ashugang</option>
+                                    <option value="Dhaka">Dhaka</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">DO Number</label>
+                                <input type="text" class="form-control" id="doNumberSearch" placeholder="Type DO Number">
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="button" class="btn btn-primary w-100" onclick="searchDO()">Search</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Table Section -->
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>SL</th>
+                        <th>Customer</th>
+                        <th>Sale Detail</th>
+                        <th>Qnt</th>
+                        <th>LC Number</th>
+                        <th>DV From</th>
+                        <th>Godown</th>
+                        <th>Gudam</th>
+                        <th>Dev Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="doChangeTableBody">
+                    {% for change in changes %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ change.customer }}</td>
+                        <td>{{ change.sale_detail }}</td>
+                        <td>{{ change.quantity }}</td>
+                        <td>{{ change.lc_number }}</td>
+                        <td>{{ change.dv_from }}</td>
+                        <td>{{ change.godown }}</td>
+                        <td>{{ change.gudam }}</td>
+                        <td>{{ change.delivery_date }}</td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="10" class="text-center text-muted">No data available</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function searchDO() {
+        const date = document.getElementById('searchDate').value;
+        const logCenter = document.getElementById('logCenterSearch').value;
+        const doNumber = document.getElementById('doNumberSearch').value;
+        
+        // In real app, this would be an AJAX call to filter data
+        alert(`Searching for: Date=${date}, Log Center=${logCenter}, DO Number=${doNumber}`);
+        
+        // For demo purposes, just show all data
+        document.querySelectorAll('#doChangeTableBody tr').forEach(row => {
+            row.style.display = '';
+        });
+    }
+</script>
+{% endblock %}

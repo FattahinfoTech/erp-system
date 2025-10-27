@@ -1,0 +1,175 @@
+<!-- templates/adjustment/product_plus.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Adjustment Product Plus{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>Adjustment Product Plus</h4>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productPlusModal">
+        Create New
+    </button>
+</div>
+
+<!-- Product Plus Modal -->
+<div class="modal fade" id="productPlusModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Product Plus</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Customer Name</label>
+                        {{ form.customer_name }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Entry Date</label>
+                        {{ form.entry_date }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Product</label>
+                        {{ form.product }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Godown</label>
+                        {{ form.godown }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Quantity</label>
+                        {{ form.quantity }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Product Plus List Table -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Adjustment ID</th>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Product</th>
+                        <th>Godown</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for adjustment in adjustments %}
+                    <tr>
+                        <td>{{ adjustment.adjustment_id }}</td>
+                        <td>{{ adjustment.entry_date }}</td>
+                        <td>{{ adjustment.customer_name }}</td>
+                        <td>{{ adjustment.product }}</td>
+                        <td>{{ adjustment.godown }}</td>
+                        <td>{{ adjustment.quantity }}</td>
+                        <td>
+                            <span class="badge bg-{% if adjustment.status == 'Pending' %}warning{% elif adjustment.status == 'Approved' %}success{% else %}info{% endif %}">
+                                {{ adjustment.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editProductPlusModal{{ adjustment.id }}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteProductPlusModal{{ adjustment.id }}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Edit Modal for each row -->
+                    <div class="modal fade" id="editProductPlusModal{{ adjustment.id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Edit Product Plus</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <form method="post" action="{% url 'product_plus' %}">
+                                    {% csrf_token %}
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label class="form-label">Customer Name</label>
+                                            <input type="text" class="form-control" name="customer_name" value="{{ adjustment.customer_name }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Entry Date</label>
+                                            <input type="date" class="form-control" name="entry_date" value="{{ adjustment.entry_date|date:'Y-m-d' }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Product</label>
+                                            <input type="text" class="form-control" name="product" value="{{ adjustment.product }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Godown</label>
+                                            <input type="text" class="form-control" name="godown" value="{{ adjustment.godown }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Quantity</label>
+                                            <input type="number" class="form-control" name="quantity" value="{{ adjustment.quantity }}" step="0.01" required>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Update</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Delete Confirmation Modal -->
+                    <div class="modal fade" id="deleteProductPlusModal{{ adjustment.id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Confirm Delete</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to delete adjustment <strong>{{ adjustment.adjustment_id }}</strong>?</p>
+                                    <p class="text-danger">This action cannot be undone.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <form method="post" action="{% url 'product_plus' %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="delete_id" value="{{ adjustment.id }}">
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center text-muted py-4">
+                            <i class="fas fa-inbox fa-3x mb-3"></i>
+                            <p>No product plus adjustments found.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

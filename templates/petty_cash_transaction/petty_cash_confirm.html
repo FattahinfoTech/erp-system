@@ -1,0 +1,253 @@
+<!-- templates/petty_cash_transaction/petty_cash_confirm.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Petty Cash Confirm{% endblock %}
+
+{% block header_buttons %}
+<div class="btn-group me-2">
+    <input type="date" class="form-control" value="{% now 'Y-m-d' %}">
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Petty Cash Waiting List</h5>
+    </div>
+    <div class="card-body">
+        <!-- Filter Options -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <label class="form-label">Filter by Transaction Type</label>
+                <select class="form-control" id="typeFilter">
+                    <option value="">All Types</option>
+                    <option value="Debit">Debit</option>
+                    <option value="Credit">Credit</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Filter by Account</label>
+                <input type="text" class="form-control" id="accountFilter" placeholder="Search account...">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Date Range</label>
+                <input type="date" class="form-control" id="dateFilter">
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-hover" id="pettyCashTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th>SL</th>
+                        <th>Date</th>
+                        <th>Account Type</th>
+                        <th>Account Info</th>
+                        <th>Amount</th>
+                        <th>Note</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for petty_cash in petty_cash_list %}
+                    <tr data-type="{{ petty_cash.transaction_type }}" data-account="{{ petty_cash.account|lower }}" data-date="{{ petty_cash.entry_date|date:'Y-m-d' }}">
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ petty_cash.entry_date }}</td>
+                        <td>
+                            <span class="badge bg-{% if petty_cash.transaction_type == 'Debit' %}danger{% else %}success{% endif %}">
+                                {{ petty_cash.get_transaction_type_display }}
+                            </span>
+                        </td>
+                        <td>{{ petty_cash.account }}</td>
+                        <td>
+                            <span class="fw-bold {% if petty_cash.transaction_type == 'Debit' %}text-danger{% else %}text-success{% endif %}">
+                                BDT {{ petty_cash.amount }}
+                            </span>
+                        </td>
+                        <td>{{ petty_cash.note }}</td>
+                        <td>{{ petty_cash.description }}</td>
+                        <td>
+                            <span class="badge bg-success">{{ petty_cash.get_status_display }}</span>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#viewModal{{ petty_cash.id }}">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="printReceipt('{{ petty_cash.petty_cash_id }}')">
+                                    <i class="fas fa-print"></i> Print
+                                </button>
+                            </div>
+
+                            <!-- View Details Modal -->
+                            <div class="modal fade" id="viewModal{{ petty_cash.id }}" tabindex="-1">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Petty Cash Details</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <table class="table table-bordered">
+                                                        <tr>
+                                                            <th width="40%">Petty Cash ID:</th>
+                                                            <td>{{ petty_cash.petty_cash_id }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Account:</th>
+                                                            <td>{{ petty_cash.account }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Transaction Type:</th>
+                                                            <td>
+                                                                <span class="badge bg-{% if petty_cash.transaction_type == 'Debit' %}danger{% else %}success{% endif %}">
+                                                                    {{ petty_cash.get_transaction_type_display }}
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Amount:</th>
+                                                            <td class="fw-bold {% if petty_cash.transaction_type == 'Debit' %}text-danger{% else %}text-success{% endif %}">
+                                                                BDT {{ petty_cash.amount }}
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <table class="table table-bordered">
+                                                        <tr>
+                                                            <th width="40%">Voucher Number:</th>
+                                                            <td>{{ petty_cash.voucher_number }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>LC Number:</th>
+                                                            <td>{{ petty_cash.lc_number }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Entry Date:</th>
+                                                            <td>{{ petty_cash.entry_date }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Status:</th>
+                                                            <td>
+                                                                <span class="badge bg-success">{{ petty_cash.get_status_display }}</span>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <div class="col-md-6">
+                                                    <strong>Note:</strong>
+                                                    <p class="border p-2 rounded">{{ petty_cash.note }}</p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <strong>Description:</strong>
+                                                    <p class="border p-2 rounded">{{ petty_cash.description }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary" onclick="printReceipt('{{ petty_cash.petty_cash_id }}')">
+                                                <i class="fas fa-print me-1"></i>Print Receipt
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="9" class="text-center text-muted py-4">
+                            <i class="fas fa-check-circle fa-3x mb-3"></i>
+                            <p>No confirmed petty cash entries found.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function printReceipt(pettyCashId) {
+    // Open print window with receipt format
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Petty Cash Receipt - ${pettyCashId}</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                .receipt-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
+                .receipt-details { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+                .receipt-details th, .receipt-details td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                .receipt-details th { background-color: #f5f5f5; }
+                .signature-section { margin-top: 50px; }
+                .signature-box { border-top: 1px solid #000; padding-top: 10px; text-align: center; width: 200px; display: inline-block; margin: 0 20px; }
+                @media print {
+                    body { margin: 0; }
+                    .no-print { display: none; }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="receipt-header">
+                <h2>Fattah Info Tech</h2>
+                <h3>Petty Cash Receipt</h3>
+                <p>Petty Cash ID: ${pettyCashId}</p>
+            </div>
+            <p>This is a sample receipt for petty cash transaction ${pettyCashId}.</p>
+            <p class="no-print"><button onclick="window.print()">Print Receipt</button></p>
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+}
+
+// Filter functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const typeFilter = document.getElementById('typeFilter');
+    const accountFilter = document.getElementById('accountFilter');
+    const dateFilter = document.getElementById('dateFilter');
+    const table = document.getElementById('pettyCashTable');
+    const rows = table.querySelectorAll('tbody tr');
+
+    function filterTable() {
+        const typeValue = typeFilter.value;
+        const accountValue = accountFilter.value.toLowerCase();
+        const dateValue = dateFilter.value;
+
+        rows.forEach(row => {
+            const rowType = row.getAttribute('data-type');
+            const rowAccount = row.getAttribute('data-account');
+            const rowDate = row.getAttribute('data-date');
+
+            const typeMatch = !typeValue || rowType === typeValue;
+            const accountMatch = !accountValue || rowAccount.includes(accountValue);
+            const dateMatch = !dateValue || rowDate === dateValue;
+
+            if (typeMatch && accountMatch && dateMatch) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    typeFilter.addEventListener('change', filterTable);
+    accountFilter.addEventListener('input', filterTable);
+    dateFilter.addEventListener('change', filterTable);
+});
+</script>
+{% endblock %}

@@ -1,0 +1,119 @@
+<!-- templates/sales/due_collect.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Due Collect{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5>Due Collection</h5>
+    </div>
+    <div class="card-body">
+        <form id="dueCollectForm">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Customer Name</label>
+                        <input type="text" class="form-control" placeholder="Enter Customer Name" id="customerSearch">
+                        <div id="customerSuggestions" class="mt-2" style="display: none;">
+                            <div class="list-group">
+                                <a href="#" class="list-group-item list-group-item-action customer-option">Customer A</a>
+                                <a href="#" class="list-group-item list-group-item-action customer-option">Customer B</a>
+                                <a href="#" class="list-group-item list-group-item-action customer-option">Customer C</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Due Invoice</label>
+                        <select class="form-control" id="dueInvoice">
+                            <option value="">Select Invoice</option>
+                            <option value="INV-10000001">INV-10000001 - BDT 5,000.00</option>
+                            <option value="INV-10000002">INV-10000002 - BDT 3,500.00</option>
+                            <option value="INV-10000003">INV-10000003 - BDT 7,200.00</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Receive Method</label>
+                        <select class="form-control" id="receiveMethod">
+                            <option value="">Select Method</option>
+                            <option value="Bank">Bank</option>
+                            <option value="Cash">Cash</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Amount</label>
+                        <input type="number" class="form-control" placeholder="Enter Amount" step="0.01" id="amount">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <button type="button" class="btn btn-primary" id="dueCollectBtn">Due Collect</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Result Message -->
+        <div id="resultMessage" class="mt-3" style="display: none;">
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i> Due collection successful!
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dueCollectBtn = document.getElementById('dueCollectBtn');
+    const resultMessage = document.getElementById('resultMessage');
+    const customerSearch = document.getElementById('customerSearch');
+    const customerSuggestions = document.getElementById('customerSuggestions');
+
+    // Customer search functionality
+    customerSearch.addEventListener('input', function() {
+        if (this.value.length > 2) {
+            customerSuggestions.style.display = 'block';
+        } else {
+            customerSuggestions.style.display = 'none';
+        }
+    });
+
+    // Customer selection
+    document.querySelectorAll('.customer-option').forEach(option => {
+        option.addEventListener('click', function(e) {
+            e.preventDefault();
+            customerSearch.value = this.textContent;
+            customerSuggestions.style.display = 'none';
+        });
+    });
+
+    // Due collection button
+    dueCollectBtn.addEventListener('click', function() {
+        const customer = customerSearch.value;
+        const invoice = document.getElementById('dueInvoice').value;
+        const method = document.getElementById('receiveMethod').value;
+        const amount = document.getElementById('amount').value;
+
+        if (!customer || !invoice || !method || !amount) {
+            alert('Please fill all fields');
+            return;
+        }
+
+        // Simulate successful collection
+        resultMessage.style.display = 'block';
+        setTimeout(() => {
+            resultMessage.style.display = 'none';
+            document.getElementById('dueCollectForm').reset();
+        }, 3000);
+    });
+});
+</script>
+{% endblock %}

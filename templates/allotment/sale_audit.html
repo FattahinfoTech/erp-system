@@ -1,0 +1,74 @@
+<!-- templates/allotment/sale_audit.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Allotment Sale Audit{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Allotment Sale Audit</h5>
+    </div>
+    <div class="card-body">
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Allotment Sale/DO ID">
+                    <button class="btn btn-primary" type="button">Search</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Month</th>
+                        <th>Dealer Info</th>
+                        <th>LC/Lot</th>
+                        <th>Godown & Log Center</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Rate</th>
+                        <th>Total</th>
+                        <th>Agreement Info</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for allotment in allotments %}
+                    <tr>
+                        <td>{{ allotment.allotment_id }}</td>
+                        <td>{{ allotment.status_type }}</td>
+                        <td>{{ allotment.date }}</td>
+                        <td>{{ allotment.month }}</td>
+                        <td>{{ allotment.dealer.name }}<br><small>{{ allotment.dealer.district }}, {{ allotment.dealer.thana }}</small></td>
+                        <td>{{ allotment.lc_number }}</td>
+                        <td>{{ allotment.godown }}</td>
+                        <td>{{ allotment.product_info }}</td>
+                        <td>{{ allotment.quantity_in_m_ton }}</td>
+                        <td>{{ allotment.unit_price }}</td>
+                        <td>AGRI/IR: {{ allotment.agri_ir }}<br>Date: {{ allotment.agri_ir_date }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-success">Approve</button>
+                            <button class="btn btn-sm btn-warning">Edit</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Simple multiplication filter (you might want to add this to a custom template filter)
+function multiply(value, arg) {
+    return value * arg;
+}
+</script>
+{% endblock %}

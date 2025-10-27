@@ -1,0 +1,59 @@
+<!-- templates/sales/sale_do_print.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Sale DO Print{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>Sale DO List</h4>
+    <div class="btn-group">
+        <button class="btn btn-outline-primary">Print Selected</button>
+        <button class="btn btn-outline-success">Export Excel</button>
+    </div>
+</div>
+
+<!-- Sale DO List Table -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>SL</th>
+                        <th>Sale ID</th>
+                        <th>Entry Date</th>
+                        <th>Customer</th>
+                        <th>Balance</th>
+                        <th>Product Name</th>
+                        <th>DVF</th>
+                        <th>Godown</th>
+                        <th>Unit Price</th>
+                        <th>Quantity</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sale in sales %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ sale.invoice_id }}</td>
+                        <td>{{ sale.created_at|date:"d-m-Y" }}</td>
+                        <td>{{ sale.customer.name }}</td>
+                        <td>BDT 0.00</td>
+                        <td>Product A</td>
+                        <td>DVF-001</td>
+                        <td>Main Godown</td>
+                        <td>BDT 100.00</td>
+                        <td>50</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning">Edit</button>
+                            <button class="btn btn-sm btn-danger">Delete</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

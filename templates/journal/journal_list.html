@@ -1,0 +1,84 @@
+<!-- templates/journal/journal_list.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Journal List{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>Journal List</h4>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#journalModal">
+        Create New
+    </button>
+</div>
+
+<!-- Journal Modal -->
+<div class="modal fade" id="journalModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Journal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Date</label>
+                        {{ form.date }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Voucher Number</label>
+                        {{ form.voucher_number }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        {{ form.description }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Journal List Table -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for journal in journals %}
+                    <tr>
+                        <td>{{ journal.journal_id }}</td>
+                        <td>{{ journal.description }}</td>
+                        <td>BDT {{ journal.amount }}</td>
+                        <td>
+                            <span class="badge bg-{% if journal.status == 'Pending' %}warning{% elif journal.status == 'Approved' %}success{% else %}info{% endif %}">
+                                {{ journal.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'journal_details' journal.pk %}" class="btn btn-sm btn-info">Details</a>
+                            <a href="{% url 'journal_print' journal.pk %}" class="btn btn-sm btn-primary">Print</a>
+                            <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

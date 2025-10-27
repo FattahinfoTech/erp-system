@@ -1,0 +1,83 @@
+<!-- templates/allotment/sale_documents.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Allotment Sale Documents{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Allotment Sale Documents</h5>
+    </div>
+    <div class="card-body">
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <input type="date" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <select class="form-control">
+                    <option value="">Select Log Center</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Noapara">Noapara</option>
+                    <option value="Nagarbari">Nagarbari</option>
+                    <option value="Chittagong">Chittagong</option>
+                    <option value="Narayanganj">Narayanganj</option>
+                    <option value="Ashugang">Ashugang</option>
+                    <option value="Dhaka">Dhaka</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" placeholder="Allotment Sale/DO ID">
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary w-100">Search</button>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Date</th>
+                        <th>Month</th>
+                        <th>Dealer Info</th>
+                        <th>LC/Lot</th>
+                        <th>Godown & Log Center</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Agreement Info</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for allotment in allotments %}
+                    <tr>
+                        <td>{{ allotment.allotment_id }}</td>
+                        <td>{{ allotment.date }}</td>
+                        <td>{{ allotment.month }}</td>
+                        <td>
+                            <strong>{{ allotment.dealer.name }}</strong><br>
+                            {{ allotment.dealer.district }}, {{ allotment.dealer.thana }}<br>
+                            {{ allotment.dealer.dealer_contact }}
+                        </td>
+                        <td>{{ allotment.lc_number }}</td>
+                        <td>{{ allotment.godown }}</td>
+                        <td>{{ allotment.product_info }}</td>
+                        <td>{{ allotment.quantity_in_m_ton }} M.Ton</td>
+                        <td>
+                            AGRI/IR: {{ allotment.agri_ir }}<br>
+                            Date: {{ allotment.agri_ir_date }}<br>
+                            Delivery: {{ allotment.delivery_from }}
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary">Print</button>
+                            <button class="btn btn-sm btn-info">View</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

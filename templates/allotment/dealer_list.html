@@ -1,0 +1,139 @@
+<!-- templates/allotment/dealer_list.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Dealer List{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>Dealer List</h4>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dealerModal">
+        Create New Dealer
+    </button>
+</div>
+
+<!-- Dealer Modal -->
+<div class="modal fade" id="dealerModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Dealer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Dealer Name</label>
+                        {{ form.name }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">District</label>
+                        {{ form.district }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Thana</label>
+                        {{ form.thana }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Dealer Registration</label>
+                        {{ form.dealer_registration }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Dealer Contact</label>
+                        {{ form.dealer_contact }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Dealer Address</label>
+                        {{ form.dealer_address }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Status</label>
+                        <select name="status" class="form-control">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                            <option value="Pending">Pending</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Search Form -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Select District</label>
+                <select class="form-control">
+                    <option value="">Select District</option>
+                    <option value="Dhaka">Dhaka</option>
+                    <option value="Chittagong">Chittagong</option>
+                    <option value="Rajshahi">Rajshahi</option>
+                    <option value="Khulna">Khulna</option>
+                    <option value="Barisal">Barisal</option>
+                    <option value="Sylhet">Sylhet</option>
+                    <option value="Rangpur">Rangpur</option>
+                    <option value="Mymensingh">Mymensingh</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Select Thana</label>
+                <select class="form-control">
+                    <option value="">Select Thana</option>
+                    <!-- Thana options would be populated based on district selection -->
+                </select>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Dealer List Table -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>SL</th>
+                        <th>Name</th>
+                        <th>Account ID</th>
+                        <th>District</th>
+                        <th>Thana</th>
+                        <th>Address</th>
+                        <th>Reg No</th>
+                        <th>Contact</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dealer in dealers %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ dealer.name }}</td>
+                        <td>{{ dealer.id }}</td>
+                        <td>{{ dealer.district }}</td>
+                        <td>{{ dealer.thana }}</td>
+                        <td>{{ dealer.dealer_address }}</td>
+                        <td>{{ dealer.dealer_registration }}</td>
+                        <td>{{ dealer.dealer_contact }}</td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

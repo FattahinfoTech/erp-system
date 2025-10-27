@@ -1,0 +1,97 @@
+<!-- templates/manage_app/godown_list.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Godown List{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>Godown List</h4>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#godownModal">
+        Create New
+    </button>
+</div>
+
+<!-- Godown Modal -->
+<div class="modal fade" id="godownModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Godown</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Godown Name</label>
+                        {{ form.name }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Godown Ghat</label>
+                        {{ form.ghat }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Address</label>
+                        {{ form.address }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Contact Number</label>
+                        {{ form.contact_number }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Type</label>
+                        {{ form.type }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Sales Hub</label>
+                        {{ form.sales_hub }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Godown List Table -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>SL</th>
+                        <th>Godown Name</th>
+                        <th>Godown Ghat</th>
+                        <th>Address</th>
+                        <th>Contact Number</th>
+                        <th>Type</th>
+                        <th>Sales Hub</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for godown in godowns %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ godown.name }}</td>
+                        <td>{{ godown.ghat }}</td>
+                        <td>{{ godown.address }}</td>
+                        <td>{{ godown.contact_number }}</td>
+                        <td>{{ godown.get_type_display }}</td>
+                        <td>{{ godown.get_sales_hub_display }}</td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,75 @@
+<!-- templates/manage_app/dump_list.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Dump List{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>Dump List</h4>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dumpModal">
+        Create New
+    </button>
+</div>
+
+<!-- Dump Modal -->
+<div class="modal fade" id="dumpModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Dump</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Godown</label>
+                        {{ form.godown }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Dump Name</label>
+                        {{ form.name }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Dump List Table -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>SL</th>
+                        <th>Godown Name</th>
+                        <th>Dump Name</th>
+                        <th>Sales Hub</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dump in dumps %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ dump.godown.name }}</td>
+                        <td>{{ dump.name }}</td>
+                        <td>{{ dump.godown.get_sales_hub_display }}</td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

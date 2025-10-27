@@ -1,0 +1,76 @@
+<!-- templates/edit_modify/allotment.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Vortuki Audit Search{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5>Vortuki Audit Search</h5>
+    </div>
+    <div class="card-body">
+        {% if messages %}
+        <div class="mb-4">
+            {% for message in messages %}
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="post" class="mb-4">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">District</label>
+                        {{ form.district }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Thana</label>
+                        {{ form.thana }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">LC Number</label>
+                        {{ form.lc_number }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Month</label>
+                        {{ form.month }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Year</label>
+                        {{ form.year }}
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Find</button>
+        </form>
+
+        <!-- Search Results Section -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h6>Search Results</h6>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Search results will appear here after performing a search.</p>
+                <!-- Results table would be dynamically populated -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

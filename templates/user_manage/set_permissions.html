@@ -1,0 +1,67 @@
+<!-- templates/user_manage/set_permissions.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Set User Permissions - {{ user.get_full_name }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5>Set Permissions for {{ user.get_full_name }}</h5>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Module</th>
+                            <th>View</th>
+                            <th>Create</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                            <th>Approve</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for permission in permissions %}
+                        <tr>
+                            <td>{{ permission.module }}</td>
+                            <td>
+                                <input type="checkbox" name="view_{{ permission.id }}" 
+                                       {% if permission.can_view %}checked{% endif %} 
+                                       class="form-check-input">
+                            </td>
+                            <td>
+                                <input type="checkbox" name="create_{{ permission.id }}" 
+                                       {% if permission.can_create %}checked{% endif %} 
+                                       class="form-check-input">
+                            </td>
+                            <td>
+                                <input type="checkbox" name="edit_{{ permission.id }}" 
+                                       {% if permission.can_edit %}checked{% endif %} 
+                                       class="form-check-input">
+                            </td>
+                            <td>
+                                <input type="checkbox" name="delete_{{ permission.id }}" 
+                                       {% if permission.can_delete %}checked{% endif %} 
+                                       class="form-check-input">
+                            </td>
+                            <td>
+                                <input type="checkbox" name="approve_{{ permission.id }}" 
+                                       {% if permission.can_approve %}checked{% endif %} 
+                                       class="form-check-input">
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Save Permissions</button>
+                <a href="{% url 'user_list' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

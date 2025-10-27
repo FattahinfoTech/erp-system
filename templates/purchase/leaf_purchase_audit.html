@@ -1,0 +1,47 @@
+<!-- templates/purchase/leaf_purchase_audit.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Leaf Purchase Audit{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5>Leaf Purchase Audit</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Purchase ID</th>
+                        <th>Date</th>
+                        <th>Supplier</th>
+                        <th>Address</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for purchase in purchases %}
+                    <tr>
+                        <td>{{ purchase.purchase_id }}</td>
+                        <td>{{ purchase.created_at|date:"d-m-Y" }}</td>
+                        <td>{{ purchase.supplier.name }}</td>
+                        <td>{{ purchase.address }}</td>
+                        <td>
+                            <span class="badge bg-{% if purchase.status == 'Pending' %}warning{% elif purchase.status == 'Approved' %}success{% else %}danger{% endif %}">
+                                {{ purchase.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

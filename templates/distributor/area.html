@@ -1,0 +1,269 @@
+<!-- templates/distributor/area.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Area/Route Management{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>Area/Route Management</h4>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#areaModal">
+        Create New Route/Area
+    </button>
+</div>
+
+<!-- Area Modal -->
+<div class="modal fade" id="areaModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Route</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Route Name</label>
+                                {{ form.route_name }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">TR Code</label>
+                                {{ form.tr_code }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">District</label>
+                                <select name="district" class="form-control" required>
+                                    <option value="">Select District</option>
+                                    <option value="Dhaka">Dhaka</option>
+                                    <option value="Chittagong">Chittagong</option>
+                                    <option value="Rajshahi">Rajshahi</option>
+                                    <option value="Khulna">Khulna</option>
+                                    <option value="Barisal">Barisal</option>
+                                    <option value="Sylhet">Sylhet</option>
+                                    <option value="Rangpur">Rangpur</option>
+                                    <option value="Mymensingh">Mymensingh</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Thana</label>
+                                <select name="thana" class="form-control" required>
+                                    <option value="">Select Thana</option>
+                                    <!-- Thana options will be populated based on district selection -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Post Code</label>
+                                {{ form.post_code }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label">Location Detail</label>
+                                {{ form.location_detail }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Area List Table -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>SL</th>
+                        <th>Route ID</th>
+                        <th>Route Name</th>
+                        <th>TR Code</th>
+                        <th>District</th>
+                        <th>Thana</th>
+                        <th>Post Code</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for area in areas %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ area.route_id }}</td>
+                        <td>{{ area.route_name }}</td>
+                        <td>{{ area.tr_code }}</td>
+                        <td>{{ area.district }}</td>
+                        <td>{{ area.thana }}</td>
+                        <td>{{ area.post_code }}</td>
+                        <td>{{ area.location_detail|truncatewords:5 }}</td>
+                        <td>
+                            <span class="badge bg-success">{{ area.status }}</span>
+                        </td>
+                        <td>
+                            <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editAreaModal{{ area.id }}">Update</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteAreaModal{{ area.id }}">Delete</a>
+
+                            <!-- Edit Area Modal -->
+                            <div class="modal fade" id="editAreaModal{{ area.id }}" tabindex="-1">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Update Route</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Route Name</label>
+                                                            <input type="text" name="route_name" class="form-control" value="{{ area.route_name }}" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <label class="form-label">TR Code</label>
+                                                            <input type="text" name="tr_code" class="form-control" value="{{ area.tr_code }}" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <label class="form-label">District</label>
+                                                            <select name="district" class="form-control" required>
+                                                                <option value="">Select District</option>
+                                                                <option value="Dhaka" {% if area.district == 'Dhaka' %}selected{% endif %}>Dhaka</option>
+                                                                <option value="Chittagong" {% if area.district == 'Chittagong' %}selected{% endif %}>Chittagong</option>
+                                                                <option value="Rajshahi" {% if area.district == 'Rajshahi' %}selected{% endif %}>Rajshahi</option>
+                                                                <option value="Khulna" {% if area.district == 'Khulna' %}selected{% endif %}>Khulna</option>
+                                                                <option value="Barisal" {% if area.district == 'Barisal' %}selected{% endif %}>Barisal</option>
+                                                                <option value="Sylhet" {% if area.district == 'Sylhet' %}selected{% endif %}>Sylhet</option>
+                                                                <option value="Rangpur" {% if area.district == 'Rangpur' %}selected{% endif %}>Rangpur</option>
+                                                                <option value="Mymensingh" {% if area.district == 'Mymensingh' %}selected{% endif %}>Mymensingh</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Thana</label>
+                                                            <input type="text" name="thana" class="form-control" value="{{ area.thana }}" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Post Code</label>
+                                                            <input type="text" name="post_code" class="form-control" value="{{ area.post_code }}" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Location Detail</label>
+                                                            <textarea name="location_detail" class="form-control" rows="3">{{ area.location_detail }}</textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Update</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Delete Area Modal -->
+                            <div class="modal fade" id="deleteAreaModal{{ area.id }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Delete Route</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Are you sure you want to delete route <strong>{{ area.route_name }}</strong>?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <form method="post" class="d-inline">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="delete_id" value="{{ area.id }}">
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+// JavaScript for dynamic thana selection based on district
+document.addEventListener('DOMContentLoaded', function() {
+    const districtSelect = document.querySelector('select[name="district"]');
+    const thanaSelect = document.querySelector('select[name="thana"]');
+    
+    const thanaData = {
+        'Dhaka': ['Gulshan', 'Banani', 'Dhanmondi', 'Mirpur', 'Uttara', 'Mohammadpur'],
+        'Chittagong': ['Kotwali', 'Panchlaish', 'Double Mooring', 'Khulshi', 'Agrabad'],
+        'Rajshahi': ['Boalia', 'Motihar', 'Shah Makhdum', 'Rajpara'],
+        'Khulna': ['Khalishpur', 'Sonadanga', 'Daulatpur', 'Khan Jahan Ali'],
+        'Barisal': ['Kotwali', 'Sadar', 'Bakerganj', 'Babuganj'],
+        'Sylhet': ['Kotwali', 'South Surma', 'Jalalabad', 'Bishwanath'],
+        'Rangpur': ['Kotwali', 'Pirgachha', 'Mithapukur', 'Gangachara'],
+        'Mymensingh': ['Kotwali', 'Trishal', 'Fulbaria', 'Gaffargaon']
+    };
+
+    if (districtSelect && thanaSelect) {
+        districtSelect.addEventListener('change', function() {
+            const selectedDistrict = this.value;
+            thanaSelect.innerHTML = '<option value="">Select Thana</option>';
+            
+            if (selectedDistrict && thanaData[selectedDistrict]) {
+                thanaData[selectedDistrict].forEach(thana => {
+                    const option = document.createElement('option');
+                    option.value = thana;
+                    option.textContent = thana;
+                    thanaSelect.appendChild(option);
+                });
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

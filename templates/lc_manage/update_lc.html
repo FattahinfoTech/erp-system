@@ -1,0 +1,57 @@
+<!-- templates/lc_manage/update_lc.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Update LC{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5>Update LC: {{ lc.lc_number }}</h5>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">LC Open Date</label>
+                        {{ form.lc_open_date }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Allot LC Number</label>
+                        {{ form.allot_lc_number }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Quantity</label>
+                        {{ form.quantity }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">LC Bank Branch</label>
+                        {{ form.lc_bank_branch }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Sale Status</label>
+                        {{ form.status }}
+                    </div>
+                </div>
+            </div>
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <a href="{% url 'lc_list' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

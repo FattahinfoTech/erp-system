@@ -1,0 +1,148 @@
+<!-- templates/transfer/transfer_receive.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Transfer Receive{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>Transfer List</h4>
+    <div>
+        <input type="date" class="form-control d-inline-block w-auto me-2" id="dateFilter">
+        <button class="btn btn-outline-secondary" onclick="filterByDate()">Filter</button>
+    </div>
+</div>
+
+<!-- Transfer List Table -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped" id="transferTable">
+                <thead>
+                    <tr>
+                        <th>SL</th>
+                        <th>Date</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transfer in transfers %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ transfer.date }}</td>
+                        <td>{{ transfer.get_from_location_display }}</td>
+                        <td>{{ transfer.get_to_location_display }}</td>
+                        <td>
+                            <span class="badge bg-success">{{ transfer.get_status_display }}</span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="receiveTransfer({{ transfer.id }})">Receive</button>
+                            <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">No transfers available for receiving</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Receive Confirmation Modal -->
+<div class="modal fade" id="receiveModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Transfer Receipt</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to mark this transfer as received?</p>
+                <p><strong>Transfer ID:</strong> <span id="receiveTransferId"></span></p>
+                <p><strong>From:</strong> <span id="receiveFrom"></span></p>
+                <p><strong>To:</strong> <span id="receiveTo"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmReceive">Confirm Receive</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentTransferId = null;
+
+function receiveTransfer(transferId) {
+    currentTransferId = transferId;
+    
+    // Get transfer details (in real implementation, this would come from an API)
+    const transferRow = document.querySelector(`tr:has(button[onclick="receiveTransfer(${transferId})"])`);
+    const cells = transferRow.querySelectorAll('td');
+    
+    document.getElementById('receiveTransferId').textContent = transferId;
+    document.getElementById('receiveFrom').textContent = cells[2].textContent;
+    document.getElementById('receiveTo').textContent = cells[3].textContent;
+    
+    const receiveModal = new bootstrap.Modal(document.getElementById('receiveModal'));
+    receiveModal.show();
+}
+
+document.getElementById('confirmReceive').addEventListener('click', function() {
+    if (currentTransferId) {
+        // In a real implementation, this would make an AJAX call to update the status to "Received"
+        fetch(`/transfer/receive/${currentTransferId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Error receiving transfer');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error receiving transfer');
+        });
+        
+        const receiveModal = bootstrap.Modal.getInstance(document.getElementById('receiveModal'));
+        receiveModal.hide();
+    }
+});
+
+function filterByDate() {
+    const dateFilter = document.getElementById('dateFilter').value;
+    const table = document.getElementById('transferTable');
+    const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    
+    for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        const dateCell = row.getElementsByTagName('td')[1];
+        
+        if (dateFilter === '' || dateCell.textContent === dateFilter) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    }
+}
+
+// Initialize date filter with today's date
+document.addEventListener('DOMContentLoaded', function() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('dateFilter').value = today;
+});
+</script>
+{% endblock %}

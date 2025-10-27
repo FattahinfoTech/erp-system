@@ -1,0 +1,125 @@
+<!-- templates/warehouse/transfer.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Godown To Godown Transfer{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Godown To Godown Transfer</h5>
+    </div>
+    <div class="card-body">
+        <!-- Form Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <form method="post" class="row g-3">
+                    {% csrf_token %}
+                    <div class="col-md-6">
+                        <label class="form-label">Product Info</label>
+                        {{ form.product_info }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">LC Number</label>
+                        {{ form.lc_number }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">From Godown</label>
+                        {{ form.from_godown }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">From Dump</label>
+                        {{ form.from_dump }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Transfer Date</label>
+                        {{ form.transfer_date }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Quantity</label>
+                        <div class="input-group">
+                            <button type="button" class="btn btn-outline-secondary" onclick="decrementTransferQuantity()">-</button>
+                            {{ form.quantity }}
+                            <button type="button" class="btn btn-outline-secondary" onclick="incrementTransferQuantity()">+</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">To Godown</label>
+                        {{ form.to_godown }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">To Dump</label>
+                        {{ form.to_dump }}
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Note</label>
+                        {{ form.note }}
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Data Table Section -->
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>SL</th>
+                        <th>Product</th>
+                        <th>LC Number</th>
+                        <th>From Godown</th>
+                        <th>From Dump</th>
+                        <th>To Godown</th>
+                        <th>To Dump</th>
+                        <th>Quantity</th>
+                        <th>Transfer Date</th>
+                        <th>Note</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transfer in transfers %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ transfer.product_info }}</td>
+                        <td>{{ transfer.lc_number }}</td>
+                        <td>{{ transfer.from_godown.name }}</td>
+                        <td>{{ transfer.from_dump.name }}</td>
+                        <td>{{ transfer.to_godown.name }}</td>
+                        <td>{{ transfer.to_dump.name }}</td>
+                        <td>{{ transfer.quantity }}</td>
+                        <td>{{ transfer.transfer_date }}</td>
+                        <td>{{ transfer.note|default:"-" }}</td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="11" class="text-center text-muted">No data available</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function incrementTransferQuantity() {
+        const quantityInput = document.getElementById('id_quantity');
+        quantityInput.value = parseInt(quantityInput.value || 0) + 1;
+    }
+
+    function decrementTransferQuantity() {
+        const quantityInput = document.getElementById('id_quantity');
+        const currentValue = parseInt(quantityInput.value || 0);
+        if (currentValue > 0) {
+            quantityInput.value = currentValue - 1;
+        }
+    }
+</script>
+{% endblock %}

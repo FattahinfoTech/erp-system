@@ -1,0 +1,101 @@
+<!-- templates/sales/sale_approve.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Sale Approve{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>Sale Pending List</h4>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#saleApproveModal">
+        Create New
+    </button>
+</div>
+
+<!-- Sale Approve Modal -->
+<div class="modal fade" id="saleApproveModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create New Sale</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Sale Date</label>
+                        {{ form.sale_date }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Customer</label>
+                        {{ form.customer }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Physical Invoice Number</label>
+                        {{ form.physical_invoice_number }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Truck Number</label>
+                        {{ form.truck_number }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Reference No</label>
+                        {{ form.reference_no }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Driver Name</label>
+                        {{ form.driver_name }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Driver Contact</label>
+                        {{ form.driver_contact }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Approved Sale List Table -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Invoice ID</th>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Truck No</th>
+                        <th>Driver</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sale in sales %}
+                    <tr>
+                        <td>{{ sale.invoice_id }}</td>
+                        <td>{{ sale.sale_date }}</td>
+                        <td>{{ sale.customer.name }}</td>
+                        <td>{{ sale.truck_number }}</td>
+                        <td>{{ sale.driver_name }}</td>
+                        <td>
+                            <span class="badge bg-success">{{ sale.get_status_display }}</span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-warning">Edit</button>
+                            <button class="btn btn-sm btn-danger">Delete</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

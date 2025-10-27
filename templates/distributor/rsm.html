@@ -1,0 +1,149 @@
+<!-- templates/distributor/rsm.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}RSM Management{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>RSM Management</h4>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rsmModal">
+        Create New RSM
+    </button>
+</div>
+
+<!-- RSM Modal -->
+<div class="modal fade" id="rsmModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New RSM</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">RSM Name</label>
+                        {{ form.name }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">RSM Contact</label>
+                        {{ form.contact }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">RSM Code</label>
+                        {{ form.rsm_code }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">RSM Region Name</label>
+                        {{ form.region_name }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- RSM List Table -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>SL</th>
+                        <th>Account ID</th>
+                        <th>Name</th>
+                        <th>RSM Code</th>
+                        <th>Contact</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rsm in rsms %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ rsm.rsm_id }}</td>
+                        <td>{{ rsm.name }}</td>
+                        <td>{{ rsm.rsm_code }}</td>
+                        <td>{{ rsm.contact }}</td>
+                        <td>
+                            <span class="badge bg-success">{{ rsm.status }}</span>
+                        </td>
+                        <td>
+                            <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editRsmModal{{ rsm.id }}">Edit</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteRsmModal{{ rsm.id }}">Delete</a>
+
+                            <!-- Edit RSM Modal -->
+                            <div class="modal fade" id="editRsmModal{{ rsm.id }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Update RSM</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label class="form-label">RSM Name</label>
+                                                    <input type="text" name="name" class="form-control" value="{{ rsm.name }}" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">RSM Contact</label>
+                                                    <input type="text" name="contact" class="form-control" value="{{ rsm.contact }}" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">RSM Code</label>
+                                                    <input type="text" name="rsm_code" class="form-control" value="{{ rsm.rsm_code }}" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">RSM Region Name</label>
+                                                    <input type="text" name="region_name" class="form-control" value="{{ rsm.region_name }}" required>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Update</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Delete RSM Modal -->
+                            <div class="modal fade" id="deleteRsmModal{{ rsm.id }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Delete RSM</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Are you sure you want to delete RSM <strong>{{ rsm.name }}</strong>?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <form method="post" class="d-inline">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="delete_id" value="{{ rsm.id }}">
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

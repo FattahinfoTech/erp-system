@@ -1,0 +1,163 @@
+<!-- templates/accounting/account_list.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Account List{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>Account Info</h4>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#accountModal">
+        Create New
+    </button>
+</div>
+
+<!-- Search and Filter Form -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Select Ex Type</label>
+                <select name="ex_type" class="form-select">
+                    <option value="">All Types</option>
+                    {% for value, label in form.fields.ex_type.choices %}
+                    <option value="{{ value }}" {% if ex_type_filter == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Select Status</label>
+                <select name="status" class="form-select">
+                    <option value="">All Status</option>
+                    <option value="Active" {% if status_filter == 'Active' %}selected{% endif %}>Active</option>
+                    <option value="Inactive" {% if status_filter == 'Inactive' %}selected{% endif %}>Inactive</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Keyword Search</label>
+                <input type="text" name="search" class="form-control" placeholder="Keyword" value="{{ search_query }}">
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Account Modal -->
+<div class="modal fade" id="accountModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Account</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Ex Type</label>
+                                {{ form.ex_type }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Account ID</label>
+                                {{ form.account_id }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Account Title</label>
+                                {{ form.account_title }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Contact Number</label>
+                                {{ form.contact_number }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">District</label>
+                                {{ form.district }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Area</label>
+                                {{ form.area }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Account Status</label>
+                                {{ form.account_status }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Account List Table -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>SL</th>
+                        <th>Acc ID</th>
+                        <th>Account Name</th>
+                        <th>Acc Type</th>
+                        <th>Sub Type</th>
+                        <th>Ex Type</th>
+                        <th>Address</th>
+                        <th>Contact</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for account in accounts %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ account.account_id }}</td>
+                        <td>{{ account.account_title }}</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>{{ account.get_ex_type_display }}</td>
+                        <td>{{ account.district }}, {{ account.area }}</td>
+                        <td>{{ account.contact_number }}</td>
+                        <td>
+                            <span class="badge bg-{% if account.account_status == 'Active' %}success{% else %}danger{% endif %}">
+                                {{ account.get_account_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

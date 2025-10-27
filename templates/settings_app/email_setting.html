@@ -1,0 +1,178 @@
+<!-- templates/settings_app/email_setting.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Email Setting{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>Email Send List</h4>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#emailSettingModal">
+        Create New
+    </button>
+</div>
+
+<!-- Email Setting Modal -->
+<div class="modal fade" id="emailSettingModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Email Send</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Type</label>
+                        {{ form.type }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Emails</label>
+                        {{ form.emails }}
+                        <div class="form-text">Enter comma separated email addresses</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Status</label>
+                        {{ form.status }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Email Setting List Table -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>SL</th>
+                        <th>Type</th>
+                        <th>Emails</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for email_setting in email_settings %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ email_setting.get_type_display }}</td>
+                        <td>
+                            <span class="email-list" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ email_setting.emails }}">
+                                {{ email_setting.emails|truncatewords:3 }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-{% if email_setting.status == 'Active' %}success{% else %}danger{% endif %}">
+                                {{ email_setting.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editEmailModal{{ email_setting.id }}">
+                                Edit
+                            </button>
+                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteEmailModal{{ email_setting.id }}">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Edit Email Setting Modal -->
+                    <div class="modal fade" id="editEmailModal{{ email_setting.id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Edit Email Setting</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <form method="post" action="{% url 'email_setting' %}">
+                                    {% csrf_token %}
+                                    <div class="modal-body">
+                                        <input type="hidden" name="email_id" value="{{ email_setting.id }}">
+                                        <div class="mb-3">
+                                            <label class="form-label">Type</label>
+                                            <select class="form-control" name="type" required>
+                                                {% for value, label in form.fields.type.choices %}
+                                                    <option value="{{ value }}" {% if email_setting.type == value %}selected{% endif %}>{{ label }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Emails</label>
+                                            <textarea class="form-control" name="emails" placeholder="Send To Email" rows="3" required>{{ email_setting.emails }}</textarea>
+                                            <div class="form-text">Enter comma separated email addresses</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Status</label>
+                                            <select class="form-control" name="status" required>
+                                                <option value="Active" {% if email_setting.status == 'Active' %}selected{% endif %}>Active</option>
+                                                <option value="Inactive" {% if email_setting.status == 'Inactive' %}selected{% endif %}>Inactive</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Update</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Delete Email Setting Modal -->
+                    <div class="modal fade" id="deleteEmailModal{{ email_setting.id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Delete Email Setting</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to delete email setting for "{{ email_setting.get_type_display }}"?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <form method="post" action="{% url 'email_setting' %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="delete_id" value="{{ email_setting.id }}">
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+.email-list {
+    cursor: pointer;
+    max-width: 200px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+</style>
+
+<script>
+// Initialize tooltips for email addresses
+document.addEventListener('DOMContentLoaded', function() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+});
+</script>
+{% endblock %}

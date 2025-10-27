@@ -1,0 +1,117 @@
+<!-- templates/distributor/route.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Route Assignment{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>Route Assignment</h4>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#routeModal">
+        Create New
+    </button>
+</div>
+
+<!-- Route Assignment Modal -->
+<div class="modal fade" id="routeModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Route to MO</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">SM</label>
+                                {{ form.sm }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">RSM</label>
+                                {{ form.rsm }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">ASM</label>
+                                {{ form.asm }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">MO</label>
+                                {{ form.mpo }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Route</label>
+                                {{ form.route }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Depo</label>
+                                {{ form.depo }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Route Assignment List Table -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>SL</th>
+                        <th>MPO</th>
+                        <th>Route</th>
+                        <th>ASM</th>
+                        <th>RSM</th>
+                        <th>SM</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for assignment in assignments %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ assignment.mpo.name }}</td>
+                        <td>{{ assignment.route.route_name }}</td>
+                        <td>{{ assignment.asm.name }}</td>
+                        <td>{{ assignment.rsm.name }}</td>
+                        <td>{{ assignment.sm.name }}</td>
+                        <td>
+                            <span class="badge bg-success">{{ assignment.status }}</span>
+                        </td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

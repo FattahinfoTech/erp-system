@@ -1,0 +1,149 @@
+<!-- templates/distributor/mpo.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}MPO Management{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>MPO Management</h4>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mpoModal">
+        Create New MPO
+    </button>
+</div>
+
+<!-- MPO Modal -->
+<div class="modal fade" id="mpoModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New MPO</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">MPO Name</label>
+                        {{ form.name }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">MPO Contact</label>
+                        {{ form.contact }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- MPO List Table -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>SL</th>
+                        <th>Account ID</th>
+                        <th>Name</th>
+                        <th>Contact</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mpo in mpos %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ mpo.mpo_id }}</td>
+                        <td>{{ mpo.name }}</td>
+                        <td>{{ mpo.contact }}</td>
+                        <td>
+                            <span class="badge bg-{% if mpo.status == 'Active' %}success{% else %}danger{% endif %}">
+                                {{ mpo.status }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+                                    Actions
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editMpoModal{{ mpo.id }}">Update</a></li>
+                                    <li><a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#deleteMpoModal{{ mpo.id }}">Delete</a></li>
+                                    <li><a class="dropdown-item text-info" href="#">Set Permission</a></li>
+                                </ul>
+                            </div>
+
+                            <!-- Edit MPO Modal -->
+                            <div class="modal fade" id="editMpoModal{{ mpo.id }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Update MPO</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <form method="post" action="{% url 'mpo_list' %}">
+                                            {% csrf_token %}
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label class="form-label">MPO Name</label>
+                                                    <input type="text" name="name" class="form-control" value="{{ mpo.name }}" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">MPO Contact</label>
+                                                    <input type="text" name="contact" class="form-control" value="{{ mpo.contact }}" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Status</label>
+                                                    <select name="status" class="form-control">
+                                                        <option value="Active" {% if mpo.status == 'Active' %}selected{% endif %}>Active</option>
+                                                        <option value="Inactive" {% if mpo.status == 'Inactive' %}selected{% endif %}>Inactive</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Update</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Delete MPO Modal -->
+                            <div class="modal fade" id="deleteMpoModal{{ mpo.id }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Delete MPO</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Are you sure you want to delete MPO <strong>{{ mpo.name }}</strong>?</p>
+                                            <p class="text-danger">This action cannot be undone.</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <form method="post" action="{% url 'mpo_list' %}" class="d-inline">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="delete_id" value="{{ mpo.id }}">
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

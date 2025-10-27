@@ -1,0 +1,149 @@
+<!-- templates/distributor/asm.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}ASM Management{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>ASM Management</h4>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#asmModal">
+        Create New ASM
+    </button>
+</div>
+
+<!-- ASM Modal -->
+<div class="modal fade" id="asmModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New ASM</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">ASM Name</label>
+                        {{ form.name }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">ASM Mobile</label>
+                        {{ form.mobile }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">ASM Code</label>
+                        {{ form.asm_code }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">ASM Zone Name</label>
+                        {{ form.zone_name }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ASM List Table -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>SL</th>
+                        <th>Account ID</th>
+                        <th>Name</th>
+                        <th>ASM Code</th>
+                        <th>Contact</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for asm in asms %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ asm.asm_id }}</td>
+                        <td>{{ asm.name }}</td>
+                        <td>{{ asm.asm_code }}</td>
+                        <td>{{ asm.mobile }}</td>
+                        <td>
+                            <span class="badge bg-success">{{ asm.status }}</span>
+                        </td>
+                        <td>
+                            <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editAsmModal{{ asm.id }}">Edit</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteAsmModal{{ asm.id }}">Delete</a>
+
+                            <!-- Edit ASM Modal -->
+                            <div class="modal fade" id="editAsmModal{{ asm.id }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Update ASM</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label class="form-label">ASM Name</label>
+                                                    <input type="text" name="name" class="form-control" value="{{ asm.name }}" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">ASM Mobile</label>
+                                                    <input type="text" name="mobile" class="form-control" value="{{ asm.mobile }}" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">ASM Code</label>
+                                                    <input type="text" name="asm_code" class="form-control" value="{{ asm.asm_code }}" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">ASM Zone Name</label>
+                                                    <input type="text" name="zone_name" class="form-control" value="{{ asm.zone_name }}" required>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Update</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Delete ASM Modal -->
+                            <div class="modal fade" id="deleteAsmModal{{ asm.id }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Delete ASM</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Are you sure you want to delete ASM <strong>{{ asm.name }}</strong>?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <form method="post" class="d-inline">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="delete_id" value="{{ asm.id }}">
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

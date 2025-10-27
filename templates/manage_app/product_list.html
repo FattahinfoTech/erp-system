@@ -1,0 +1,161 @@
+<!-- templates/manage_app/product_list.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Product List{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>Product List</h4>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal">
+        Add New Finish Product
+    </button>
+</div>
+
+<!-- Product Modal -->
+<div class="modal fade" id="productModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Finish Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Category</label>
+                                {{ form.category }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Product Group</label>
+                                {{ form.product_group }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Title</label>
+                                {{ form.title }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Title Bengali</label>
+                                {{ form.title_bengali }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Country</label>
+                                {{ form.country }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Color</label>
+                                {{ form.color }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Unit Type</label>
+                                {{ form.unit_type }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Unit Strength</label>
+                                {{ form.unit_strength }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Status</label>
+                                {{ form.status }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Open Sale Price</label>
+                                {{ form.open_sale_price }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Allotment Sale Price</label>
+                                {{ form.allotment_sale_price }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Product List Table -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>SL</th>
+                        <th>Category</th>
+                        <th>Pro Group</th>
+                        <th>Title</th>
+                        <th>Title Bn</th>
+                        <th>Color</th>
+                        <th>Unit Type</th>
+                        <th>Unit Strength</th>
+                        <th>Open Sale Price</th>
+                        <th>Allotment Sale Price</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ product.get_category_display }}</td>
+                        <td>{{ product.product_group }}</td>
+                        <td>{{ product.title }}</td>
+                        <td>{{ product.title_bengali }}</td>
+                        <td>{{ product.color }}</td>
+                        <td>{{ product.get_unit_type_display }}</td>
+                        <td>{{ product.unit_strength }}</td>
+                        <td>{{ product.open_sale_price }}</td>
+                        <td>{{ product.allotment_sale_price }}</td>
+                        <td>
+                            <span class="badge bg-{% if product.status == 'Active' %}success{% elif product.status == 'Inactive' %}danger{% else %}warning{% endif %}">
+                                {{ product.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'edit_product' product.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{% url 'delete_product' product.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,194 @@
+<!-- templates/lc_manage/lc_list.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}LC List{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>LC List</h4>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#lcModal">
+        Create New LC
+    </button>
+</div>
+
+<!-- LC Modal -->
+<div class="modal fade" id="lcModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create New LC</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Product Info</label>
+                                {{ form.product_name }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Consignee</label>
+                                {{ form.consignee }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Exporter Info</label>
+                                {{ form.exporter_info }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Registration NO</label>
+                                {{ form.registration_no }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Mother Vessel</label>
+                                {{ form.mother_vessel }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">LC Bank</label>
+                                {{ form.lc_bank }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">LC Bank Branch</label>
+                                {{ form.lc_bank_branch }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Exporter Country</label>
+                                {{ form.exporter_country }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">LC Account</label>
+                                {{ form.lc_account }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">LC Number</label>
+                                {{ form.lc_number }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Allot LC Number</label>
+                                {{ form.allot_lc_number }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Unit Price</label>
+                                {{ form.unit_price }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Quantity</label>
+                                {{ form.quantity }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Total</label>
+                                <input type="text" class="form-control" readonly value="{{ form.instance.total }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">LC Open Date</label>
+                                {{ form.lc_open_date }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Status</label>
+                                {{ form.status }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Create New LC</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- LC List Table -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>SL</th>
+                        <th>LC Number</th>
+                        <th>MV</th>
+                        <th>Allot LC</th>
+                        <th>Product</th>
+                        <th>Consignee</th>
+                        <th>Bank Info</th>
+                        <th>Entry Date</th>
+                        <th>LC Date</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lc in lcs %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ lc.lc_number }}</td>
+                        <td>{{ lc.mother_vessel }}</td>
+                        <td>{{ lc.allot_lc_number }}</td>
+                        <td>{{ lc.product_name }}</td>
+                        <td>{{ lc.consignee.name }}</td>
+                        <td>{{ lc.lc_bank }}</td>
+                        <td>{{ lc.created_at|date:"d-m-Y" }}</td>
+                        <td>{{ lc.lc_open_date }}</td>
+                        <td>{{ lc.quantity }}</td>
+                        <td>
+                            <span class="badge bg-{% if lc.status == 'Active' %}success{% elif lc.status == 'Running' %}primary{% else %}warning{% endif %}">
+                                {{ lc.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'update_lc' lc.pk %}" class="btn btn-sm btn-primary">Update</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,101 @@
+<!-- templates/warehouse/lv_activity.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}LV Activity{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">LV Activity</h5>
+        <div class="col-md-3">
+            <select class="form-select" id="lcSelector" onchange="filterByLC()">
+                <option value="">Select LC</option>
+                {% for activity in activities %}
+                <option value="{{ activity.lc_number }}">{{ activity.lc_number }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered" id="lvActivityTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th>SL</th>
+                        <th>LIGHTER VESSEL</th>
+                        <th>MOBILE NO.</th>
+                        <th>MV</th>
+                        <th>Cary ID</th>
+                        <th>Lighter Freight</th>
+                        <th>Srv ID</th>
+                        <th>Survey Bill</th>
+                        <th>Load Quan Asper Survey</th>
+                        <th>Actual Received Quantity</th>
+                        <th>Payable Quantity</th>
+                        <th>Time Not to Count</th>
+                        <th>Cause</th>
+                        <th>Short/EX</th>
+                        <th>Charpatra Date</th>
+                        <th>Load Start Time</th>
+                        <th>Load Complete Time</th>
+                        <th>Sailing Time</th>
+                        <th>Arrival Time</th>
+                        <th>Discharge Start Time</th>
+                        <th>Discharge Complete Time</th>
+                        <th>Sale Center</th>
+                        <th>Landing Ghat Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for activity in activities %}
+                    <tr data-lc="{{ activity.lc_number }}">
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ activity.lighter_vessel }}</td>
+                        <td>{{ activity.mobile_no }}</td>
+                        <td>{{ activity.mv }}</td>
+                        <td>{{ activity.cary_id }}</td>
+                        <td>{{ activity.lighter_freight }}</td>
+                        <td>{{ activity.srv_id }}</td>
+                        <td>{{ activity.survey_bill }}</td>
+                        <td>{{ activity.load_quan_asper_survey }}</td>
+                        <td>{{ activity.actual_received_quantity }}</td>
+                        <td>{{ activity.payable_quantity }}</td>
+                        <td>{{ activity.time_not_to_count }}</td>
+                        <td>{{ activity.cause }}</td>
+                        <td>{{ activity.short_ex }}</td>
+                        <td>{{ activity.charpatra_date }}</td>
+                        <td>{{ activity.load_start_time|date:"d/m/Y H:i" }}</td>
+                        <td>{{ activity.load_complete_time|date:"d/m/Y H:i" }}</td>
+                        <td>{{ activity.sailing_time|date:"d/m/Y H:i" }}</td>
+                        <td>{{ activity.arrival_time|date:"d/m/Y H:i" }}</td>
+                        <td>{{ activity.discharge_start_time|date:"d/m/Y H:i" }}</td>
+                        <td>{{ activity.discharge_complete_time|date:"d/m/Y H:i" }}</td>
+                        <td>{{ activity.sale_center }}</td>
+                        <td>{{ activity.landing_ghat_name }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="23" class="text-center text-muted">No data available</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function filterByLC() {
+        const selectedLC = document.getElementById('lcSelector').value;
+        const rows = document.querySelectorAll('#lvActivityTable tbody tr');
+        
+        rows.forEach(row => {
+            if (!selectedLC || row.getAttribute('data-lc') === selectedLC) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,168 @@
+<!-- templates/warehouse/correction.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Correction{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Correction</h5>
+    </div>
+    <div class="card-body">
+        <!-- Search Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label">LC Number</label>
+                                <select class="form-select" id="lcSearch">
+                                    <option value="">Select LC</option>
+                                    {% for correction in corrections %}
+                                    <option value="{{ correction.lc_number }}">{{ correction.lc_number }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Date</label>
+                                <input type="date" class="form-control" id="dateSearch">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">ID</label>
+                                <input type="text" class="form-control" id="idSearch" placeholder="Enter ID">
+                            </div>
+                        </form>
+                        
+                        <!-- Action Buttons -->
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <div class="d-flex flex-wrap gap-2">
+                                    <button type="button" class="btn btn-primary" onclick="loadData('lc-mv')">Edit LC-MV</button>
+                                    <button type="button" class="btn btn-primary" onclick="loadData('mv-lv')">Edit MV-LV</button>
+                                    <button type="button" class="btn btn-primary" onclick="loadData('mv-gdn')">Edit MV-GDN</button>
+                                    <button type="button" class="btn btn-primary" onclick="loadData('gdn-gm')">Edit GDN-GM</button>
+                                    <button type="button" class="btn btn-primary" onclick="loadData('product-mv-lv')">Product MV-LV</button>
+                                    <button type="button" class="btn btn-primary" onclick="loadData('purchase-info')">Purchase Info</button>
+                                    <button type="button" class="btn btn-primary" onclick="loadData('transfer-edit')">Transfer Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Display Section -->
+        <div id="correctionData" style="display: none;">
+            <div class="card">
+                <div class="card-header">
+                    <h6 id="dataHeader" class="mb-0"></h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>SL</th>
+                                    <th>DSL</th>
+                                    <th>Mother Vessel</th>
+                                    <th>Product</th>
+                                    <th>LC Quantity</th>
+                                    <th>Edit Quantity</th>
+                                    <th>Edit LC Trader</th>
+                                    <th>Edit Reg No.</th>
+                                    <th>Edit Allot LC</th>
+                                    <th>Edit</th>
+                                </tr>
+                            </thead>
+                            <tbody id="correctionTableBody">
+                                <!-- Data will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Existing Data Table -->
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>SL</th>
+                        <th>Correction ID</th>
+                        <th>LC Number</th>
+                        <th>Date</th>
+                        <th>Mother Vessel</th>
+                        <th>Product</th>
+                        <th>LC Quantity</th>
+                        <th>Edit Quantity</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for correction in corrections %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ correction.correction_id }}</td>
+                        <td>{{ correction.lc_number }}</td>
+                        <td>{{ correction.date }}</td>
+                        <td>{{ correction.mother_vessel }}</td>
+                        <td>{{ correction.product }}</td>
+                        <td>{{ correction.lc_quantity }}</td>
+                        <td>{{ correction.edit_quantity }}</td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="9" class="text-center text-muted">No data available</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function loadData(type) {
+        const lcNumber = document.getElementById('lcSearch').value;
+        if (!lcNumber) {
+            alert('Please select an LC number');
+            return;
+        }
+
+        // Show the correction data section
+        document.getElementById('correctionData').style.display = 'block';
+        
+        // Set header
+        document.getElementById('dataHeader').textContent = `Edit ${type.toUpperCase()}: ${lcNumber}`;
+        
+        // Populate table with sample data (in real app, this would come from AJAX)
+        const tableBody = document.getElementById('correctionTableBody');
+        tableBody.innerHTML = `
+            <tr>
+                <td>1</td>
+                <td>${lcNumber}</td>
+                <td>Mother Vessel Sample</td>
+                <td>Product Sample</td>
+                <td>1000</td>
+                <td><input type="number" class="form-control" value="1000"></td>
+                <td><input type="text" class="form-control" value="Trader Name"></td>
+                <td><input type="text" class="form-control" value="REG123"></td>
+                <td><input type="text" class="form-control" value="ALLOT${lcNumber}"></td>
+                <td><button class="btn btn-sm btn-success" onclick="updateData()">Update</button></td>
+            </tr>
+        `;
+    }
+
+    function updateData() {
+        alert('Data updated successfully!');
+        // In real app, this would send AJAX request to update data
+    }
+</script>
+{% endblock %}

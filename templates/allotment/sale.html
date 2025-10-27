@@ -1,0 +1,192 @@
+<!-- templates/allotment/sale.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Allotment Sale{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Allotment Sale</h5>
+    </div>
+    <div class="card-body">
+        <form method="post" class="mb-4">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">District</label>
+                        {{ form.district }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Thana</label>
+                        {{ form.thana }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Dealer</label>
+                        {{ form.dealer }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">LC Number</label>
+                        {{ form.lc_number }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Product Info</label>
+                        {{ form.product_info }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Month</label>
+                        {{ form.month }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Year</label>
+                        {{ form.year }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">AGRI/IR</label>
+                        {{ form.agri_ir }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">AGRI/IR Date</label>
+                        {{ form.agri_ir_date }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Balance Qty In Bag</label>
+                        {{ form.balance_qty_in_bag }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Sale Qty In Bag</label>
+                        {{ form.sale_qty_in_bag }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">M Ton</label>
+                        {{ form.m_ton }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Quantity In M Ton</label>
+                        {{ form.quantity_in_m_ton }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Unit Price</label>
+                        {{ form.unit_price }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Delivery Product</label>
+                        {{ form.delivery_product }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Delivery From</label>
+                        {{ form.delivery_from }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Godown</label>
+                        {{ form.godown }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Status</label>
+                        {{ form.status_type }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Date</label>
+                        {{ form.date }}
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>SL</th>
+                        <th>ID</th>
+                        <th>Dealer</th>
+                        <th>LC/Lot</th>
+                        <th>Product</th>
+                        <th>Month</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for allotment in allotments %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ allotment.allotment_id }}</td>
+                        <td>{{ allotment.dealer.name }}</td>
+                        <td>{{ allotment.lc_number }}</td>
+                        <td>{{ allotment.product_info }}</td>
+                        <td>{{ allotment.month }}</td>
+                        <td>{{ allotment.quantity_in_m_ton }}</td>
+                        <td>
+                            <span class="badge bg-{% if allotment.status == 'Pending' %}warning{% elif allotment.status == 'Approved' %}success{% else %}info{% endif %}">
+                                {{ allotment.status }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

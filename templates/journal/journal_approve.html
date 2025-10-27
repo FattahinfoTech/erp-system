@@ -1,0 +1,44 @@
+<!-- templates/journal/journal_approve.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Journal Approve{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5>Journal Approval List</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for journal in journals %}
+                    <tr>
+                        <td>{{ journal.journal_id }}</td>
+                        <td>{{ journal.description }}</td>
+                        <td>BDT {{ journal.amount }}</td>
+                        <td>
+                            <span class="badge bg-warning">{{ journal.get_status_display }}</span>
+                        </td>
+                        <td>
+                            <a href="{% url 'journal_details' journal.pk %}" class="btn btn-sm btn-info">View</a>
+                            <button class="btn btn-sm btn-success">Approve</button>
+                            <button class="btn btn-sm btn-danger">Reject</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

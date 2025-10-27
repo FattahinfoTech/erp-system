@@ -1,0 +1,134 @@
+<!-- templates/edit_modify/transaction.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Edit/Modify Transaction{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5>Edit/Modify Transaction</h5>
+    </div>
+    <div class="card-body">
+        {% if messages %}
+        <div class="mb-4">
+            {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="row">
+            <!-- Sale Update -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">Sale Update</h6>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                {{ sale_form.sale_id }}
+                            </div>
+                            <button type="submit" name="sale_update" class="btn btn-primary w-100">
+                                Sale Info Update
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Purchase Update -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">Purchase Update</h6>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                {{ purchase_form.purchase_id }}
+                            </div>
+                            <button type="submit" name="purchase_update" class="btn btn-primary w-100">
+                                Purchase Info Update
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bank Update -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">Bank Update</h6>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                {{ bank_form.bank_id }}
+                            </div>
+                            <button type="submit" name="bank_update" class="btn btn-primary w-100">
+                                Bank Info Update
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cash Update -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">Cash Update</h6>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                {{ cash_form.cash_id }}
+                            </div>
+                            <button type="submit" name="cash_update" class="btn btn-primary w-100">
+                                Update Cash Info
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Journal Update -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">Journal Update</h6>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                {{ journal_form.journal_id }}
+                            </div>
+                            <button type="submit" name="journal_update" class="btn btn-primary w-100">
+                                Journal Info Update
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Allotment Update -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">Allotment Update</h6>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                {{ allotment_form.allotment_id }}
+                            </div>
+                            <button type="submit" name="allotment_update" class="btn btn-primary w-100">
+                                Allotment Info Update
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

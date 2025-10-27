@@ -1,0 +1,54 @@
+<!-- templates/sales/allotment_do_print.html -->
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block page_title %}Allotment DO Print{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5>Allotment DO Print</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>SL</th>
+                        <th>ID</th>
+                        <th>LC/Lot</th>
+                        <th>Product</th>
+                        <th>Month</th>
+                        <th>Quantity</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td><a href="#" target="_blank" class="text-primary">ALLOT-10000001</a></td>
+                        <td>LC-2024-001</td>
+                        <td>Fertilizer A</td>
+                        <td>January</td>
+                        <td>1000 Bags</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary">Print</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td><a href="#" target="_blank" class="text-primary">ALLOT-10000002</a></td>
+                        <td>LC-2024-002</td>
+                        <td>Fertilizer B</td>
+                        <td>February</td>
+                        <td>1500 Bags</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary">Print</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

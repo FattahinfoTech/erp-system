@@ -1,0 +1,82 @@
+<!-- templates/warehouse/lighter_to_ghat.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Lighter Vessel To Ghat{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Lighter Vessel To Ghat</h5>
+    </div>
+    <div class="card-body">
+        <!-- Form Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <form method="post" class="row g-3">
+                    {% csrf_token %}
+                    <div class="col-md-6">
+                        <label class="form-label">LC Number</label>
+                        {{ form.lc_number }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Lighter Vessel</label>
+                        {{ form.lighter_vessel }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Product Info</label>
+                        {{ form.product_info }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Moving Date</label>
+                        {{ form.moving_date }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Received Godown</label>
+                        {{ form.received_godown }}
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Data Table Section -->
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>SL</th>
+                        <th>LC Number</th>
+                        <th>Lighter Vessel</th>
+                        <th>Product</th>
+                        <th>Moving Date</th>
+                        <th>Received Godown</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transfer in transfers %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ transfer.lc_number }}</td>
+                        <td>{{ transfer.lighter_vessel }}</td>
+                        <td>{{ transfer.product_info }}</td>
+                        <td>{{ transfer.moving_date }}</td>
+                        <td>{{ transfer.received_godown.name }}</td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted">No data available</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

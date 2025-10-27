@@ -1,0 +1,113 @@
+<!-- templates/warehouse/mother_to_lighter.html -->
+{% extends 'base.html' %}
+
+{% block page_title %}Mother Vessel To Lighter Vessel{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Mother Vessel To Lighter Vessel</h5>
+    </div>
+    <div class="card-body">
+        <!-- Form Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <form method="post" class="row g-3">
+                    {% csrf_token %}
+                    <div class="col-md-6">
+                        <label class="form-label">LC Number</label>
+                        {{ form.lc_number }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Mother Vessel</label>
+                        {{ form.mother_vessel }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Lighter Vessel</label>
+                        {{ form.lighter_vessel }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Carrying Contractor</label>
+                        {{ form.carrying_contractor }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Product Info</label>
+                        {{ form.product_info }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Quantity</label>
+                        <div class="input-group">
+                            <button type="button" class="btn btn-outline-secondary" onclick="decrementQuantity()">-</button>
+                            {{ form.quantity }}
+                            <button type="button" class="btn btn-outline-secondary" onclick="incrementQuantity()">+</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Arrival Date</label>
+                        {{ form.arrival_date }}
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Data Table Section -->
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>SL</th>
+                        <th>LC Number</th>
+                        <th>Mother Vessel</th>
+                        <th>Lighter Vessel</th>
+                        <th>Carrying Contractor</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Arrival Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transfer in transfers %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ transfer.lc_number }}</td>
+                        <td>{{ transfer.mother_vessel }}</td>
+                        <td>{{ transfer.lighter_vessel }}</td>
+                        <td>{{ transfer.carrying_contractor }}</td>
+                        <td>{{ transfer.product_info }}</td>
+                        <td>{{ transfer.quantity }}</td>
+                        <td>{{ transfer.arrival_date }}</td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="9" class="text-center text-muted">No data available</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function incrementQuantity() {
+        const quantityInput = document.getElementById('id_quantity');
+        quantityInput.value = parseInt(quantityInput.value || 0) + 1;
+    }
+
+    function decrementQuantity() {
+        const quantityInput = document.getElementById('id_quantity');
+        const currentValue = parseInt(quantityInput.value || 0);
+        if (currentValue > 0) {
+            quantityInput.value = currentValue - 1;
+        }
+    }
+</script>
+{% endblock %}
